@@ -46,8 +46,44 @@ const initialUserState: UserState = {
 };
 
 // Define the reducer function. It takes the current state and an action, and returns the next state
-const userReducer = (_currentState: UserState, arg: UserState) => {
-  return arg;
+/*
+Actions:
+ {
+  type: string // defines the type of action we want to take
+  payload?: any // some bit of data we want to include in our next state
+ }
+*/
+
+interface FetchUserStartAction {
+  type: "FETCH_USER_START";
+}
+
+interface FetchUserSuccessAction {
+  type: "FETCH_USER_SUCCESS";
+  payload: User;
+}
+
+interface FetchUserErrorAction {
+  type: "FETCH_USER_ERROR";
+}
+
+type UserAction =
+  | FetchUserStartAction
+  | FetchUserSuccessAction
+  | FetchUserErrorAction;
+
+const userReducer = (_currentState: UserState, action: UserAction) => {
+  const { type } = action;
+  switch (type) {
+    case "FETCH_USER_START":
+      return { user: null, isLoading: true, error: false };
+    case "FETCH_USER_SUCCESS":
+      return { user: action.payload, isLoading: false, error: false };
+    case "FETCH_USER_ERROR":
+      return { user: null, isLoading: false, error: true };
+    default:
+      throw new Error(`Unknown action type: ${type}`);
+  }
 };
 
 const User = () => {
@@ -60,7 +96,7 @@ const User = () => {
   async function fetchUser() {
     try {
       // Set Loading state
-      setUserState({ isLoading: true, error: false, user: null });
+      setUserState({ type: "FETCH_USER_START" });
 
       // Simulate a delay
       await new Promise<void>((resolve) => setTimeout(() => resolve(), 1500));
@@ -76,10 +112,10 @@ const User = () => {
       userSchema.parse(userData);
 
       // Set user state
-      setUserState({ user: userData, isLoading: false, error: false });
+      setUserState({ type: "FETCH_USER_SUCCESS", payload: userData });
     } catch (error) {
       // Set error state and log error
-      setUserState({ user: null, isLoading: false, error: true });
+      setUserState({ type: "FETCH_USER_ERROR" });
 
       console.error(error);
     }
