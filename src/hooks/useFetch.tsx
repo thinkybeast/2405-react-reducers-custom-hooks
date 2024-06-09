@@ -2,6 +2,7 @@ import React from "react";
 import { ZodSchema, ZodError } from "zod";
 import { randomErrorString } from "@/utils";
 
+// Note the use of Generics to define the type of data that will be fetched
 type FetchState<T> = {
   data: T | null;
   isLoading: boolean;
@@ -13,6 +14,8 @@ type FetchAction<T> =
   | { type: "FETCH_SUCCESS"; payload: T }
   | { type: "FETCH_ERROR" };
 
+// Define the reducer function. Again, note the use of Generics to define the shape of the state object that is returned
+// The extra comma in `<T,>` is included only because the syntax linter interprets <T> as a JSX tag. The comma is a workaround to avoid this issue and is not strictly necessary in TypeScript.
 const fetchReducer = <T,>(
   _currentState: FetchState<T>,
   action: FetchAction<T>
@@ -29,6 +32,7 @@ const fetchReducer = <T,>(
   }
 };
 
+// Define the custom hook
 const useFetch = <T,>(
   url: string,
   schema?: ZodSchema<T>
@@ -59,11 +63,14 @@ const useFetch = <T,>(
     }
   };
 
-  React.useEffect(() => {
-    fetchData();
-  }, [url]);
+  // Memoize the fetchData function for the useEffect dependency. Not strictly necessary in this case, but good practice
+  const fetchDataMemoized = React.useCallback(fetchData, [url, schema]);
 
-  return [state, fetchData];
+  React.useEffect(() => {
+    fetchDataMemoized();
+  }, [fetchDataMemoized]);
+
+  return [state, fetchDataMemoized];
 };
 
 export default useFetch;
