@@ -1,6 +1,7 @@
 import React from "react";
 import z from "zod";
 import Loading from "./Loading";
+import { randomErrorString } from "@/utils";
 
 const userSchema = z.object({
   avatar: z.string(),
@@ -19,12 +20,15 @@ const User = () => {
   async function fetchUser() {
     try {
       setIsLoading(true);
-
+      setUser(null);
       // Simulate a delay
       await new Promise<void>((resolve) => setTimeout(() => resolve(), 1500));
 
       // Fetch user data from API
-      const result = await fetch("https://random-data-api.com/api/v2/users");
+      // Randomly add either an empty string or an nonsense string to the URL to simulate an API error
+      const result = await fetch(
+        "https://random-data-api.com/api/v2/users" + randomErrorString()
+      );
       const userData = await result.json();
 
       // Validate API response
