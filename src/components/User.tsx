@@ -1,5 +1,6 @@
 import React from "react";
 import z from "zod";
+import Loading from "./Loading";
 
 const userSchema = z.object({
   avatar: z.string(),
@@ -13,9 +14,12 @@ type User = z.infer<typeof userSchema>;
 
 const User = () => {
   const [user, setUser] = React.useState<User | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   async function fetchUser() {
     try {
+      setIsLoading(true);
+
       // Simulate a delay
       await new Promise<void>((resolve) => setTimeout(() => resolve(), 1500));
 
@@ -28,6 +32,8 @@ const User = () => {
       setUser(userData);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -35,6 +41,10 @@ const User = () => {
     // Fetch user data when component mounts
     fetchUser();
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <article>
