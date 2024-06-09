@@ -1,24 +1,25 @@
-interface BeerErrorProps {
+interface ErrorProps {
   onRetry: () => void;
+  children?: React.ReactNode;
 }
 
-const BeerError = ({ onRetry }: BeerErrorProps) => {
+const Error = ({ onRetry, children }: ErrorProps) => {
   return (
     <div
       style={{
-        backgroundColor: "brown",
+        backgroundColor: "crimson",
         color: "white",
         padding: "1rem",
         borderRadius: "0.5rem",
       }}
     >
       <h2>😔 Our deepest apologies. 😔</h2>
-      <p>We seem to have some trouble finding a cold beer at the moment.</p>
+      <p>{children}</p>
       <button onClick={onRetry} style={{ backgroundColor: "white" }}>
-        I demand refreshment
+        It is okay. Try again.
       </button>
     </div>
   );
 };
 
-export default BeerError;
+export default Error;

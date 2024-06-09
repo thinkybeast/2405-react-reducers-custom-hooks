@@ -1,9 +1,9 @@
 import z from "zod";
-import Loading from "./UserLoading";
-import UserError from "./UserError";
+import Loading from "@/components/shared/Loading";
+import Error from "@/components/shared/Error";
 import useFetch from "@/hooks/useFetch";
 
-export const userSchema = z.object({
+const userSchema = z.object({
   avatar: z.string(),
   first_name: z.string(),
   employment: z.object({
@@ -11,7 +11,7 @@ export const userSchema = z.object({
   }),
 });
 
-export type User = z.infer<typeof userSchema>;
+type User = z.infer<typeof userSchema>;
 
 const User = () => {
   const [{ data: user, isLoading, error }, fetchData] = useFetch<User>(
@@ -20,11 +20,15 @@ const User = () => {
   );
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading>🔎 Finding the coolest of users...</Loading>;
   }
 
   if (error) {
-    return <UserError onRetry={fetchData} />;
+    return (
+      <Error onRetry={fetchData}>
+        We seem to have some trouble finding a cool user at the moment.
+      </Error>
+    );
   }
 
   return (

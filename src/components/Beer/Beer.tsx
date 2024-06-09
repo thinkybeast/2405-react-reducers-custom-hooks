@@ -1,14 +1,14 @@
 import z from "zod";
-import Loading from "./BeerLoading";
-import BeerError from "./BeerError";
+import Loading from "@/components/shared/Loading";
+import Error from "@/components/shared/Error";
 import useFetch from "@/hooks/useFetch";
 
-export const beerSchema = z.object({
+const beerSchema = z.object({
   brand: z.string(),
   name: z.string(),
 });
 
-export type Beer = z.infer<typeof beerSchema>;
+type Beer = z.infer<typeof beerSchema>;
 
 const User = () => {
   const [{ data: beer, isLoading, error }, fetchData] = useFetch<Beer>(
@@ -17,11 +17,15 @@ const User = () => {
   );
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading>🍻 Finding the coldest of beers...</Loading>;
   }
 
   if (error) {
-    return <BeerError onRetry={fetchData} />;
+    return (
+      <Error onRetry={fetchData}>
+        We seem to have some trouble finding a cold beer at the moment.
+      </Error>
+    );
   }
 
   return beer ? (
