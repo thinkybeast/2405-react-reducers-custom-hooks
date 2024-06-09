@@ -1,6 +1,7 @@
 import React from "react";
 import z from "zod";
 import Loading from "./Loading";
+import UserError from "./UserError";
 import { randomErrorString } from "@/utils";
 
 const userSchema = z.object({
@@ -16,11 +17,15 @@ type User = z.infer<typeof userSchema>;
 const User = () => {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
 
   async function fetchUser() {
     try {
+      // Reset state
       setIsLoading(true);
       setUser(null);
+      setError(false);
+
       // Simulate a delay
       await new Promise<void>((resolve) => setTimeout(() => resolve(), 1500));
 
@@ -35,8 +40,11 @@ const User = () => {
       userSchema.parse(userData);
       setUser(userData);
     } catch (error) {
+      // Set error state and log error
+      setError(true);
       console.error(error);
     } finally {
+      // Reset loading state
       setIsLoading(false);
     }
   }
@@ -48,6 +56,10 @@ const User = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <UserError onRetry={fetchUser} />;
   }
 
   return (
