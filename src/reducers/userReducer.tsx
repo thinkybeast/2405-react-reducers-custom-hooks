@@ -1,4 +1,21 @@
-import type { UserState, User } from "@/components/User";
+/*
+    Note: In our updated application, we are using the custom hook useFetch to fetch user data. This code is therefore not needed in the User component, but is included here for reference.
+*/
+
+interface User {
+  avatar: string;
+  first_name: string;
+  employment: {
+    key_skill: string;
+  };
+}
+
+interface UserState {
+  user: User | null;
+  isLoading: boolean;
+  error: boolean;
+}
+
 /*
 Actions: Objects that describe the type of change we want to make to our state
 
@@ -8,7 +25,6 @@ By convention, actions are objects with a type property that describes the type 
   payload?: any // some bit of data we want to include in our next state
  }
 */
-
 interface FetchUserStartAction {
   type: "FETCH_USER_LOADING";
 }
