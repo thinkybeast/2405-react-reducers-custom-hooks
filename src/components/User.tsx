@@ -16,8 +16,14 @@ const User = () => {
 
   async function fetchUser() {
     try {
+      // Simulate a delay
+      await new Promise<void>((resolve) => setTimeout(() => resolve(), 1500));
+
+      // Fetch user data from API
       const result = await fetch("https://random-data-api.com/api/v2/users");
       const userData = await result.json();
+
+      // Validate API response
       userSchema.parse(userData);
       setUser(userData);
     } catch (error) {
@@ -26,6 +32,7 @@ const User = () => {
   }
 
   React.useEffect(() => {
+    // Fetch user data when component mounts
     fetchUser();
   }, []);
 
@@ -34,7 +41,7 @@ const User = () => {
       {user ? (
         <div>
           <div style={{ width: "310px", height: "310px", margin: "0 auto" }}>
-            <img src={user.avatar} />
+            <img src={user.avatar} key={user.avatar} />
           </div>
           <p>
             Meet <b>{user.first_name}!</b>
