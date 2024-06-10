@@ -14,10 +14,12 @@ type User = z.infer<typeof userSchema>;
 
 const User = () => {
   const [user, setUser] = React.useState<User | null>(null);
+  // Add state to track loading status
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   async function fetchUser() {
     try {
+      // Set loading state to true when fetching data
       setIsLoading(true);
 
       // Simulate a delay
@@ -33,6 +35,7 @@ const User = () => {
     } catch (error) {
       console.error(error);
     } finally {
+      // Set loading state to false after fetching data
       setIsLoading(false);
     }
   }
@@ -42,6 +45,7 @@ const User = () => {
     fetchUser();
   }, []);
 
+  // Display loading component while fetching data
   if (isLoading) {
     return <Loading />;
   }
