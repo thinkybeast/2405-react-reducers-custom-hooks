@@ -17,11 +17,12 @@ type User = z.infer<typeof userSchema>;
 const User = () => {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  // Add state to track error status
   const [error, setError] = React.useState<boolean>(false);
 
   async function fetchUser() {
     try {
-      // Reset state
+      // Set loading state and reset user and error states
       setIsLoading(true);
       setUser(null);
       setError(false);
