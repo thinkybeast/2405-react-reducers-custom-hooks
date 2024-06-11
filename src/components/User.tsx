@@ -45,7 +45,7 @@ const initialUserState: UserState = {
   error: false,
 };
 
-// Define the reducer function. It takes the current state and an action, and returns the next state
+// Define the reducer function. It takes the current state and an argument, and returns the next state
 const userReducer = (_currentState: UserState, arg: UserState) => {
   return arg;
 };
