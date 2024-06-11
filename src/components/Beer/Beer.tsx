@@ -10,7 +10,7 @@ const beerSchema = z.object({
 
 type Beer = z.infer<typeof beerSchema>;
 
-const User = () => {
+const Beer = () => {
   const [{ data: beer, isLoading, error }, fetchData] = useFetch<Beer>(
     "https://random-data-api.com/api/v2/beers",
     beerSchema
@@ -41,4 +41,4 @@ const User = () => {
   ) : null;
 };
 
-export default User;
+export default Beer;
